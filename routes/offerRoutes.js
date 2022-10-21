@@ -24,7 +24,6 @@ router.post(
       //   console.log(req.files.picture);
       const { title, description, price, condition, city, brand, size, color } =
         req.body;
-      const picture = req.files?.pic;
 
       const offer = new Offer({
         product_name: title,
@@ -40,9 +39,9 @@ router.post(
         owner: user._id,
       });
 
-      if (picture) {
+      if (req.files?.picture) {
         const pictureUploaded = await cloudinary.uploader.upload(
-          convertToBase64(picture),
+          convertToBase64(req.files.picture),
           { folder: `/vinted/offers/${offer._id}` }
         );
         //   console.log(pictureUploaded);

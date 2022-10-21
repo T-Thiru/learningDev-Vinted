@@ -16,7 +16,6 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
   try {
     console.log(req.body);
     const { username, email, password, newsletter } = req.body;
-    const avatar = req.files?.picture;
 
     if (validator.isEmail(email)) {
       const checkUser = await User.findOne({ email: email });
@@ -47,9 +46,9 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
         salt: salt,
       });
 
-      if (avatar) {
+      if (req.files?.picture) {
         const avatarToBe = await cloudinary.uploader.upload(
-          convertToBase64(avatar),
+          convertToBase64(req.files?.picture),
           { folder: `/vinted/users/${user._id}` }
         );
 
