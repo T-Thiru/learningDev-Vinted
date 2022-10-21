@@ -114,43 +114,75 @@ router.post("/test", isAuthenticated, fileUpload(), async (req, res) => {
 
 router.get("/offers", async (req, res) => {
   try {
-    console.log(req.query);
-    const { title, priceMin, priceMax, numberOfElements, pageNumber, sort } =
-      req.query;
+    let filters = {};
 
-    const regex = new RegExp(title, "i");
+    if (req.query.title) {
+      filters.product_name = new RegExp(req.query.title, "i");
+    }
 
-    // const filters = {};
+    if (req.query.priceMin) {
+      filters.product_price = {
+        $gte: req.query.priceMin,
+      };
+    }
 
-    const offers = await Offer.find({
-      $or: [
-        { product_name: regex },
-        { product_price: { $gte: Number(priceMin), $lte: Number(priceMax) } },
-      ],
+    if (req.query.priceMax) {
+      if (filters.product_price) {
+        filters.product_price.$lte = req.query.priceMax;
+      } else {
+        filters.product_price = {
+          $lte: req.query.priceMax,
+        };
+      }
+    }
 
-      $or: [{ product_price: priceMin }, { product_price: priceMax }],
-    })
-      .sort({ product_price: sort })
-      .limit(numberOfElements)
-      .skip(pageNumber * numberOfElements - numberOfElements)
-      .select("product_name product_price");
-    res.json({ "elements found": offers.length, offers: offers });
+    let sort = {};
 
-    // res.json({ message: "Ok offers" });
+    if (req.query.sort === "price-desc") {
+      sort = { product_price: -1 };
+    } else if (req.query.sort === "price-asc") {
+      sort = { product_price: 1 };
+    }
+
+    let page;
+    if (Number(req.query.page) < 1) {
+      page = 1;
+    } else {
+      page = Number(req.query.page);
+    }
+
+    let limit = Number(req.query.limit);
+
+    const offers = await Offer.find(filters)
+      .populate({
+        path: "owner",
+        select: "account",
+      })
+      .sort(sort)
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    const count = await Offer.countDocuments(filters);
+
+    res.json({
+      count: count,
+      offers: offers,
+    });
   } catch (error) {
+    console.log(error.message);
     res.status(400).json({ message: error.message });
   }
 });
 
 router.get("/offer/:id", async (req, res) => {
   try {
-    console.log(req.path);
-    const offer = await Offer.findById(req.path.replace("/offer/", ""))
-      .populate("owner")
-      .select("username");
-    console.log(offer);
+    const offer = await Offer.findById(req.params.id).populate({
+      path: "owner",
+      select: "account.username account.phone account.avatar",
+    });
     res.json(offer);
   } catch (error) {
+    console.log(error.message);
     res.status(400).json({ message: error.message });
   }
 });
