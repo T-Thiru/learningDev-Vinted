@@ -117,35 +117,25 @@ router.get("/offers", async (req, res) => {
     console.log(req.query);
     const { title, priceMin, priceMax, numberOfElements, pageNumber, sort } =
       req.query;
-    if (
-      title ||
-      priceMin ||
-      priceMax ||
-      numberOfElements ||
-      pageNumber ||
-      sort
-    ) {
-      const regex = new RegExp(title, "i");
 
-      const filters = {};
+    const regex = new RegExp(title, "i");
 
-      const offers = await Offer.find({
-        $or: [
-          { product_name: title },
-          { product_price: { $gte: Number(priceMin) } },
-          { product_price: { $lte: Number(priceMax) } },
-          { product_price: { $gte: Number(priceMin), $lte: Number(priceMax) } },
-        ],
-      })
-        .sort({ product_price: sort })
-        .limit(numberOfElements)
-        .skip(pageNumber * numberOfElements - numberOfElements)
-        .select("product_name product_price");
-      res.json({ "elements found": offers.length, offers: offers });
-    } else {
-      const offers = await Offer.find();
-      res.json(offers);
-    }
+    // const filters = {};
+
+    const offers = await Offer.find({
+      $or: [
+        { product_name: regex },
+        { product_price: { $gte: Number(priceMin), $lte: Number(priceMax) } },
+      ],
+
+      $or: [{ product_price: priceMin }, { product_price: priceMax }],
+    })
+      .sort({ product_price: sort })
+      .limit(numberOfElements)
+      .skip(pageNumber * numberOfElements - numberOfElements)
+      .select("product_name product_price");
+    res.json({ "elements found": offers.length, offers: offers });
+
     // res.json({ message: "Ok offers" });
   } catch (error) {
     res.status(400).json({ message: error.message });
