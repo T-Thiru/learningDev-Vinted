@@ -1,0 +1,21 @@
+{
+  "name": "vintedauth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cloudinary": "^1.32.0",
+    "crypto-js": "^4.1.1",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
+    "mongoose": "^6.6.5",
+    "uid2": "^1.0.0",
+    "validator": "^13.7.0"
+  }
+}
