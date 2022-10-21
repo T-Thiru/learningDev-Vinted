@@ -16,7 +16,7 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
   try {
     console.log(req.body);
     const { username, email, password, newsletter } = req.body;
-    const avatar = req.files.picture;
+    const avatar = req.files?.picture;
 
     if (validator.isEmail(email)) {
       const checkUser = await User.findOne({ email: email });

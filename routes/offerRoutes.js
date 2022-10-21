@@ -24,7 +24,7 @@ router.post(
       //   console.log(req.files.picture);
       const { title, description, price, condition, city, brand, size, color } =
         req.body;
-      const picture = req.files.pic;
+      const picture = req.files?.pic;
 
       const offer = new Offer({
         product_name: title,
