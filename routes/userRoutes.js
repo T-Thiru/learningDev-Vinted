@@ -47,17 +47,19 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
         salt: salt,
       });
 
-      const avatarToBe = await cloudinary.uploader.upload(
-        convertToBase64(avatar),
-        { folder: `/vinted/users/${user._id}` }
-      );
+      if (avatar) {
+        const avatarToBe = await cloudinary.uploader.upload(
+          convertToBase64(avatar),
+          { folder: `/vinted/users/${user._id}` }
+        );
 
-      Object.assign(user.account, {
-        avatar: {
-          picture: avatarToBe.secure_url,
-          picture_id: avatarToBe.public_id,
-        },
-      });
+        Object.assign(user.account, {
+          avatar: {
+            picture: avatarToBe.secure_url,
+            picture_id: avatarToBe.public_id,
+          },
+        });
+      }
 
       await user.save();
       res.json({
