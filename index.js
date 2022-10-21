@@ -5,12 +5,12 @@ const cloudinary = require("cloudinary").v2;
 const app = express();
 app.use(express.json());
 
-mongoose.connect("mongodb://localhost:27017/vintedAuth");
+mongoose.connect(process.env.MONGODB_URI);
 
 cloudinary.config({
-  cloud_name: "dvvgqedzk",
-  api_key: "627814132946492",
-  api_secret: "jFPeM1f8PPGW1TjUb3sj_OiQmek",
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
   secure: true,
 });
 
