@@ -1,10 +1,12 @@
 const express = require("express");
+const cors = require("cors");
 require("dotenv").config();
 
 const mongoose = require("mongoose");
 const cloudinary = require("cloudinary").v2;
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 mongoose.connect(process.env.MONGODB_URI);
 
@@ -26,6 +28,6 @@ app.all("*", (req, res) => {
   });
 });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
   console.log("Server has started");
 });
