@@ -18,10 +18,10 @@ router.post(
   fileUpload(),
   async (req, res) => {
     try {
-      const user = req.user;
+      // const user = req.user;
       //   console.log(user);
-      //   console.log(req.body);
-      //   console.log(req.files.picture);
+      // console.log(req.body);
+      // console.log(req.files.picture);
       const { title, description, price, condition, city, brand, size, color } =
         req.body;
 
@@ -36,13 +36,14 @@ router.post(
           { color: color },
           { emplacement: city },
         ],
-        owner: user._id,
+        // owner: user._id,
       });
 
-      if (req.files?.picture) {
+      if (req.files.picture) {
         const pictureUploaded = await cloudinary.uploader.upload(
           convertToBase64(req.files.picture),
-          { folder: `/vinted/offers/${offer._id}` }
+          { folder: "ex" }
+          // { folder: `/vinted/offers/${offer._id}` }
         );
         //   console.log(pictureUploaded);
         Object.assign(offer, {
@@ -51,8 +52,8 @@ router.post(
       }
 
       await offer.save();
-      const finalOffer = await offer.populate("owner");
-      res.json(finalOffer);
+      // const finalOffer = await offer.populate("owner");
+      res.json(offer);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
