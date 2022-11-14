@@ -20,11 +20,11 @@ router.post(
     try {
       // const user = req.user;
       //   console.log(user);
-      // console.log(req.body);
-      // console.log(req.files.picture);
+      console.log(req.body);
       const { title, description, price, condition, city, brand, size, color } =
         req.body;
-      const pics = req.files?.picture;
+      const pics = Object.values(req.files);
+      console.log(pics[1]);
 
       const offer = new Offer({
         product_name: title,
@@ -41,17 +41,19 @@ router.post(
       });
 
       if (pics) {
-        const pictureUploaded = await Promise.all(
-          pics.map((picture) => {
-            return cloudinary.uploader.upload(convertToBase64(picture), {
-              folder: `/ex`,
-            });
-          })
-        );
+        const pictureUploaded = pics.map((picture) => {
+          return cloudinary.uploader.upload(convertToBase64(picture), {
+            folder: `/ex`,
+          });
+        });
 
-        console.log(pictureUploaded);
+        const result = await Promise.all(pictureUploaded);
+
+        console.log(result);
+
         Object.assign(offer, {
-          product_pictures: pictureUploaded,
+          product_image: result[0],
+          product_pictures: result,
         });
       }
       await offer.save();
