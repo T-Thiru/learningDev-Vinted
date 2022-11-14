@@ -46,7 +46,7 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
         salt: salt,
       });
 
-      if (req.files.picture) {
+      if (req.files?.picture) {
         const avatarToBe = await cloudinary.uploader.upload(
           convertToBase64(req.files.picture),
           { folder: `/vinted/users/${user._id}` }
