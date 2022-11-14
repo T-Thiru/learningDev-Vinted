@@ -24,6 +24,7 @@ router.post(
       // console.log(req.files.picture);
       const { title, description, price, condition, city, brand, size, color } =
         req.body;
+      const pics = req.files?.picture;
 
       const offer = new Offer({
         product_name: title,
@@ -39,18 +40,20 @@ router.post(
         // owner: user._id,
       });
 
-      if (req.files.picture) {
-        const pictureUploaded = await cloudinary.uploader.upload(
-          convertToBase64(req.files.picture),
-          { folder: "ex" }
-          // { folder: `/vinted/offers/${offer._id}` }
+      if (pics) {
+        const pictureUploaded = await Promise.all(
+          pics.map((picture) => {
+            return cloudinary.uploader.upload(convertToBase64(picture), {
+              folder: `/ex`,
+            });
+          })
         );
-        //   console.log(pictureUploaded);
+
+        console.log(pictureUploaded);
         Object.assign(offer, {
-          product_image: pictureUploaded,
+          product_pictures: pictureUploaded,
         });
       }
-
       await offer.save();
       // const finalOffer = await offer.populate("owner");
       res.json(offer);
@@ -188,3 +191,7 @@ router.get("/offer/:id", async (req, res) => {
 });
 
 module.exports = router;
+
+// {
+//   folder: `/vinted/offers/${offer._id}`,
+// }
