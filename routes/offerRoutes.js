@@ -14,7 +14,7 @@ const convertToBase64 = (file) => {
 
 router.post(
   "/offer/publish",
-  // isAuthenticated,
+  isAuthenticated,
   fileUpload(),
   async (req, res) => {
     try {
@@ -43,7 +43,7 @@ router.post(
       if (pics) {
         const pictureUploaded = pics.map((picture) => {
           return cloudinary.uploader.upload(convertToBase64(picture), {
-            folder: `/ex`,
+            folder: `/vinted/offers/${offer._id}`,
           });
         });
 
@@ -193,7 +193,3 @@ router.get("/offer/:id", async (req, res) => {
 });
 
 module.exports = router;
-
-// {
-//   folder: `/vinted/offers/${offer._id}`,
-// }
