@@ -161,7 +161,6 @@ router.get("/offers", async (req, res) => {
     const offers = await Offer.find(filters)
       .populate({
         path: "owner",
-        select: "account",
       })
       .sort(sort)
       .skip((page - 1) * limit)
