@@ -18,8 +18,8 @@ router.post(
   fileUpload(),
   async (req, res) => {
     try {
-      // const user = req.user;
-      //   console.log(user);
+      const user = req.user;
+      // console.log(user);
       console.log(req.body);
       const { title, description, price, condition, city, brand, size, color } =
         req.body;
@@ -37,7 +37,7 @@ router.post(
           { color: color },
           { emplacement: city },
         ],
-        // owner: user._id,
+        owner: user._id,
       });
 
       if (pics) {
