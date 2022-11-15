@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const Offer = mongoose.model("Offer", {
+  paid: Boolean,
   product_name: String,
   product_description: String,
   product_price: Number,

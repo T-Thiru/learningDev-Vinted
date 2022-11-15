@@ -211,7 +211,11 @@ router.post("/payment", async (req, res) => {
     const payment = new Payment({
       transation: response,
     });
+    Object.assign(offer, {
+      paid: true,
+    });
     await payment.save();
+    await offer.save();
 
     res.json(response);
   } catch (error) {
