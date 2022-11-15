@@ -45,9 +45,7 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
           );
 
           Object.assign(newUser.account, {
-            avatar: {
-              picture: avatarToBe,
-            },
+            avatar: avatarToBe,
           });
         }
 
