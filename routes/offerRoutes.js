@@ -57,8 +57,8 @@ router.post(
         });
       }
       await offer.save();
-      // const finalOffer = await offer.populate("owner");
-      res.json(offer);
+      const finalOffer = await offer.populate("owner");
+      res.json(finalOffer);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
@@ -180,10 +180,7 @@ router.get("/offers", async (req, res) => {
 
 router.get("/offer/:id", async (req, res) => {
   try {
-    const offer = await Offer.findById(req.params.id).populate({
-      path: "owner",
-      select: "account.username account.phone account.avatar",
-    });
+    const offer = await Offer.findById(req.params.id).populate("owner");
     res.json(offer);
   } catch (error) {
     console.log(error.message);
