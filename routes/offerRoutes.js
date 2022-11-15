@@ -193,7 +193,7 @@ router.post("/payment", async (req, res) => {
   try {
     console.log(req.body);
     const stripeToken = req.body.stripeToken;
-    const offer = await Offer.findById(req.body.offerId).populate("owner");
+    const offer = await Offer.findById(req.body.id).populate("owner");
     // const user = await User.findById(req.body.client);
     // Créer la transaction
     console.log(offer);
