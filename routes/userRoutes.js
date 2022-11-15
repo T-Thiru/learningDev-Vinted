@@ -1,7 +1,7 @@
 const express = require("express");
 const fileUpload = require("express-fileupload");
 const cloudinary = require("cloudinary").v2;
-const validator = require("validator");
+// const validator = require("validator");
 const router = express.Router();
 const User = require("../models/User");
 const SHA256 = require("crypto-js/sha256");
@@ -14,8 +14,8 @@ const convertToBase64 = (file) => {
 
 router.post("/user/signup", fileUpload(), async (req, res) => {
   try {
-    console.log(req.body);
-    console.log(req.files?.picture);
+    // console.log(req.body);
+    // console.log(req.files?.picture);
     const user = await User.findOne({ email: req.body.email });
     const avatar = req.files?.picture;
 
@@ -81,9 +81,7 @@ router.post("/user/login", async (req, res) => {
         res.json({
           id: loginUser.id,
           token: loginUser.token,
-          account: {
-            username: loginUser.account.username,
-          },
+          account: loginUser.account,
         });
       } else {
         res.json({
