@@ -1,11 +1,14 @@
 const express = require("express");
 const fileUpload = require("express-fileupload");
+require("dotenv").config();
 const cloudinary = require("cloudinary").v2;
-const validator = require("validator");
+// const validator = require("validator");
 const router = express.Router();
 const User = require("../models/User");
 const Offer = require("../models/Offer");
+const Payment = require("../models/Payment");
 const isAuthenticated = require("../middlewares/isAuthauticated");
+const stripe = require("stripe")(process.env.STRIPE_API_SECRET);
 const { $where } = require("../models/User");
 
 const convertToBase64 = (file) => {
@@ -180,6 +183,37 @@ router.get("/offer/:id", async (req, res) => {
   try {
     const offer = await Offer.findById(req.params.id).populate("owner");
     res.json(offer);
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).json({ message: error.message });
+  }
+});
+
+router.post("/payment", async (req, res) => {
+  try {
+    console.log(req.body);
+    const stripeToken = req.body.stripeToken;
+    const offer = await Offer.findById(req.body.offerId).populate("owner");
+    // const user = await User.findById(req.body.client);
+    // Créer la transaction
+    console.log(offer);
+    const response = await stripe.charges.create({
+      amount: offer.product_price * 100,
+      currency: "eur",
+      description: offer.product_name,
+      source: stripeToken,
+    });
+    console.log(response.status);
+
+    // TODO
+    // Sauvegarder la transaction dans une BDD MongoDB
+
+    const payment = new Payment({
+      transation: response,
+    });
+    await payment.save();
+
+    res.json(response);
   } catch (error) {
     console.log(error.message);
     res.status(400).json({ message: error.message });
