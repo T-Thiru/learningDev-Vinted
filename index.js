@@ -4,17 +4,10 @@ require("dotenv").config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-const mongoose = require("mongoose");
-const cloudinary = require("cloudinary").v2;
-
-mongoose.connect(process.env.MONGODB_URI);
-
 const userRoutes = require("./routes/userRoutes");
 const offerRoutes = require("./routes/offerRoutes");
 app.use(userRoutes);
 app.use(offerRoutes);
-
 const { createAgent } = require("@forestadmin/agent");
 const {
   createMongooseDataSource,
@@ -34,6 +27,11 @@ createAgent({
   // Replace "myExpressApp" by your Express application
   .mountOnExpress(app)
   .start();
+
+const mongoose = require("mongoose");
+const cloudinary = require("cloudinary").v2;
+
+mongoose.connect(process.env.MONGODB_URI);
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
