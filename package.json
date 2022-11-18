@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@forestadmin/agent": "^1.4.1",
+    "@forestadmin/datasource-mongoose": "^1.1.2",
     "cloudinary": "^1.32.0",
     "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
@@ -18,6 +20,7 @@
     "express": "^4.18.2",
     "express-fileupload": "^1.4.0",
     "mongoose": "^6.6.5",
+    "mongoose-models": "^0.3.1",
     "stripe": "^10.17.0",
     "uid2": "^1.0.0",
     "validator": "^13.7.0"
